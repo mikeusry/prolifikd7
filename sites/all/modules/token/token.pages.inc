@@ -19,6 +19,7 @@ function theme_token_tree_link($variables) {
   }
 
   $info = token_theme();
+<<<<<<< HEAD
   $variables['options']['query']['options'] = array_intersect_key($variables, $info['token_tree']['variables']);
 
   // We should never pass the dialog option to theme_token_tree(). It is only
@@ -35,6 +36,9 @@ function theme_token_tree_link($variables) {
   $variables['options']['query']['options'] = drupal_json_encode($variables['options']['query']['options']);
 
   // Set the token tree to open in a separate window.
+=======
+  $variables['options']['query']['token_tree'] = array_intersect_key($variables, $info['token_tree']['variables']);
+>>>>>>> 7ea3841476932c9f97e3ab3fd0ccf15bc2285d0e
   $variables['options']['attributes'] + array('target' => '_blank');
 
   return l($variables['text'], 'token/tree', $variables['options']);
@@ -44,6 +48,7 @@ function theme_token_tree_link($variables) {
  * Page callback to output a token tree as an empty page.
  */
 function token_page_output_tree() {
+<<<<<<< HEAD
   $options = isset($_GET['options']) ? drupal_json_decode($_GET['options']) : array();
 
   // Check the token against the serialized options to prevent random access to
@@ -57,6 +62,10 @@ function token_page_output_tree() {
   $options['dialog'] = FALSE;
 
   $output = theme('token_tree', array($options));
+=======
+  $options = isset($_GET['token_tree']) ? $_GET['token_tree'] : array();
+  $output = theme('token_tree', array('dialog' => FALSE) + $options);
+>>>>>>> 7ea3841476932c9f97e3ab3fd0ccf15bc2285d0e
   print '<html><head><title></title>' . drupal_get_css() . drupal_get_js() . '</head>';
   print '<body class="token-tree">' . $output . '</body></html>';
   drupal_exit();
