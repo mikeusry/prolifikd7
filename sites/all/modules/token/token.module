@@ -11,11 +11,7 @@
 define('TOKEN_MAX_DEPTH', 9);
 
 /**
-<<<<<<< HEAD
  * Implements hook_help().
-=======
- * Impelements hook_help().
->>>>>>> 7ea3841476932c9f97e3ab3fd0ccf15bc2285d0e
  */
 function token_help($path, $arg) {
   if ($path == 'admin/help#token') {
@@ -186,10 +182,6 @@ function token_theme() {
     ),
     'file' => 'token.pages.inc',
   );
-<<<<<<< HEAD
-=======
-  $info['token_tree_link']['variables'] += $info['token_tree']['variables'];
->>>>>>> 7ea3841476932c9f97e3ab3fd0ccf15bc2285d0e
 
   return $info;
 }
@@ -321,7 +313,6 @@ function token_field_display_alter(&$display, $context) {
     // use the default token formatter.
     if (empty($view_mode_settings[$context['view_mode']]['custom_settings'])) {
       $field_type_info = field_info_field_types($context['field']['type']);
-<<<<<<< HEAD
 
       // If the field has specified a specific formatter to be used by default
       // with tokens, use that, otherwise use the default formatter.
@@ -333,16 +324,6 @@ function token_field_display_alter(&$display, $context) {
       $display['settings'] = isset($formatter_info['settings']) ? $formatter_info['settings'] : array();
       $display['settings']['label'] = 'hidden';
       $display['module'] = $formatter_info['module'];
-=======
-      if (!empty($field_type_info['default_token_formatter'])) {
-        $display['type'] = $field_type_info['default_token_formatter'];
-
-        $formatter_info = field_info_formatter_types($display['type']);
-        $display['settings'] = isset($formatter_info['settings']) ? $formatter_info['settings'] : array();
-        $display['settings']['label'] = 'hidden';
-        $display['module'] = $formatter_info['module'];
-      }
->>>>>>> 7ea3841476932c9f97e3ab3fd0ccf15bc2285d0e
     }
   }
 }
@@ -461,19 +442,12 @@ function token_entity_info_alter(&$info) {
  * Adds missing token support for core modules.
  */
 function token_module_implements_alter(&$implementations, $hook) {
-<<<<<<< HEAD
   module_load_include('inc', 'token', 'token.tokens');
 
   if ($hook == 'tokens' || $hook == 'token_info' || $hook == 'token_info_alter' || $hook == 'tokens_alter') {
     foreach (_token_core_supported_modules() as $module) {
       if (module_exists($module) && function_exists($module . '_' . $hook)) {
         $implementations[$module] = FALSE;
-=======
-  if ($hook == 'tokens' || $hook == 'token_info') {
-    foreach (_token_core_supported_modules() as $module) {
-      if (module_exists($module)) {
-        $implementations[$module] = TRUE;
->>>>>>> 7ea3841476932c9f97e3ab3fd0ccf15bc2285d0e
       }
     }
     // Move token.module to get included first since it is responsible for
