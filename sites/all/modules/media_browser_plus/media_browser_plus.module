@@ -134,9 +134,25 @@ function media_browser_plus_thumbnailsJSON() {
       }
     }
     // More conditions.
-    $conditions[] = array(
-      'field' => array('field_folder', 'tid', array($folder), 'IN'),
-    );
+    if ($folder) {
+      $conditions[] = array(
+        'field' => array('field_folder', 'tid', array($folder), 'IN'),
+      );
+    }
+    elseif ($folder === 0) {
+      // Get unsorted files. We can't use EFQ conditions because the field
+      // tables are joined using inner join, what excludes unsorted files from
+      // the whole query at all. Thus fetch the fids of the unsorted fields and
+      // use this as condition.
+      $query = db_select('file_managed')
+        ->fields('file_managed', array('fid', 'fid'))
+        ->condition('uri', db_like('temporary://') . '%', 'NOT LIKE');
+      $query->leftJoin('field_data_field_folder', 'folder', "entity_type = 'file' AND entity_id = file_managed.fid");
+      $result = $query->execute()->fetchAll(PDO::FETCH_KEY_PAIR);
+      $conditions[] = array(
+        'property' => array('fid', $result, 'IN'),
+      );
+    }
     $order = array(array('property' => array('fid', 'DESC')));
     $media_entities = media_browser_plus_load_multiple(array('conditions' => $conditions, 'order' => $order));
     module_load_include('inc', 'media', 'includes/media.browser');
@@ -513,7 +529,9 @@ function media_browser_plus_form_file_entity_add_upload_alter(&$form, &$form_sta
  */
 function media_browser_plus_form_file_entity_edit_alter(&$form, &$form_state) {
   // Setting the weight accordingly.
-  $form['field_folder']['#weight'] = $form['field_tags']['#weight'] - 1;
+  if (isset($form['field_tags']['#weight'])) {
+    $form['field_folder']['#weight'] = $form['field_tags']['#weight'] - 1;
+  }
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
@@ -978,7 +996,7 @@ function _media_browser_plus_has_unsorted_media() {
   // *eeeewwh*!
   $query = db_select('file_managed')
     ->fields('file_managed', array('fid'))
-    ->condition('uri', db_like('temporary://%'), 'NOT LIKE')
+    ->condition('uri', db_like('temporary://') . '%', 'NOT LIKE')
     ->range(0, 1);
   $query->leftJoin('field_data_field_folder', 'folder', "entity_type = 'file' AND entity_id = file_managed.fid");
   $result = $query->execute()->fetchCol();

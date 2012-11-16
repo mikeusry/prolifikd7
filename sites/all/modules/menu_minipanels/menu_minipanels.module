@@ -14,11 +14,10 @@
  *    preprocess function for links and menu links.
  * 2. When links or menu links are being displayed they will first be ran
  *    through the preprocess function defined in step 2, this adds a class
- *    to help identify the menu item.
- * 3. The template_preprocess_page() function is added at the page level which
- *    compiles the output of each menu and passes it to another function where
- *    it is stored in a static variable.
- * 4. The hook_page_alter() function is used to append the final output.
+ *    to help identify the menu item; the final panel is rendered during this
+ *    process and statically cached for later retrieval.
+ * 3. The hook_page_alter() function loads the output previously generated and
+ *    appends it to the footer.
  */
 
 /**
@@ -140,7 +139,7 @@ function menu_minipanels_form_menu_edit_item_alter(&$form, $form_state, $form_id
 
     // If no Mini Panels are found, leave a message.
     if (empty($panel_minis)) {
-      drupal_set_message(t('No Mini Panels are available, some need to be added via the <a href="!link" title="Mini Panels administrator">Mini Panels admin</a> for the Menu_MiniPanels module to work.', array('!link' => url('admin/structure/panels/settings/panels-mini'))), 'warning');
+      drupal_set_message(t('No Mini Panels are available, some need to be added via the <a href="!link" title="Mini Panels administrator">Mini Panels admin</a> for the Menu_MiniPanels module to work.', array('!link' => url('admin/structure/mini-panels'))), 'warning');
     }
 
     // Mini Panels are available.
@@ -311,16 +310,24 @@ function menu_minipanels__preprocess_link($link) {
 }
 
 /**
- * Stores all rendered minipanels through the page load.
- * Will later be used by @menu_minipanels_footer to add all required minipanels to $closure.
- * See @menu_minipanels_footer and @_menu_minipanels_include
+ * Stores the generated output of all rendered minipanels. Will later be used
+ * by @menu_minipanels_preprocess_page to display the generated output.
+ *
  * @param Int $mlid - the menu item id that needs the minipanel rendered.
  * @param String $minipanel_name - the name of the minipanel to render.
  */
 function menu_minipanels_panels($mlid = NULL, $minipanel_name = NULL) {
   static $panels = array();
   if ($minipanel_name != NULL) {
-    $panels[$mlid] = $minipanel_name;
+    $panel = panels_mini_block_view($minipanel_name);
+    // Convert the block to a render array.
+    $panel['#markup'] = $panel['content'];
+    unset($panel['content']);
+    unset($panel['subject']);
+    // Wrap the minipanel.
+    $panel['#prefix'] = '<div class="menu-minipanels menu-minipanel-' . $mlid . '">';
+    $panel['#suffix'] = '</div>';
+    $panels[] = $panel;
   }
   else {
     return $panels;
@@ -352,7 +359,6 @@ function _menu_minipanels_include($minipanel_name, $menu_config) {
   }
 
   $mlid = $menu_config['mlid'];
-  unset($menu_config['mlid']);
   
   // The same panel/mlid may be added multiple times, if the same menu is added
   // to a page more than once, i.e. the primary links, plus primary links also
@@ -410,6 +416,9 @@ function _menu_minipanels_include($minipanel_name, $menu_config) {
   if (isset($menu_config['style']['width']) && empty($menu_config['style']['width'])) {
     unset($menu_config['style']['width']);
   }
+  if (isset($menu_config['position']['container']) && empty($menu_config['position']['container'])) {
+    unset($menu_config['position']['container']);
+  }
 
   $settings = array(
     'menuMinipanels' => array(
@@ -463,12 +472,25 @@ function menu_minipanels_page_alter(&$page) {
   // to use menu_get_names() here as the data is cached, and it won't be
   // possible that the shortcut sets have been accidentally added.
   $load_requirements = FALSE;
+  $enabled_menus = array();
   foreach (menu_get_names() as $menu) {
     if (variable_get('menu_minipanels_' . $menu . '_enabled', FALSE)) {
+      $enabled_menus[] = $menu;
+
       // Check whether qTip actually needs to be loaded.
       if (menu_minipanels_prepare_links(menu_navigation_links($menu))) {
         $load_requirements = TRUE;
       }
+    }
+  }
+
+  // If the main menu is enabled and the main & secondary menus both point to
+  // the same menu, load the second level of that menu.
+  $primary_menu = variable_get('menu_main_links_source', 'main-menu');
+  $secondary_menu = variable_get('menu_secondary_links_source', 'user-menu');
+  if (in_array($primary_menu, $enabled_menus) && $primary_menu == $secondary_menu) {
+    if (menu_minipanels_prepare_links(menu_navigation_links($primary_menu, 1))) {
+      $load_requirements = TRUE;
     }
   }
 
@@ -486,26 +508,8 @@ function menu_minipanels_page_alter(&$page) {
     // Load the qTip script.
     drupal_add_js($qtip_path, array('scope' => 'footer', 'weight' => -99));
 
-    // Compile the output of each of the requested MiniPanels.
-    $output = '';
-    foreach (menu_minipanels_panels(NULL, NULL) as $mlid => $minipanel_name) {
-      $panel = panels_mini_block_view($minipanel_name);
-      // Convert the block to a render array.
-      $panel['#markup'] = $panel['content'];
-      unset($panel['content']);
-      unset($panel['subject']);
-      // Wrap the minipanel.
-      $panel['#prefix'] = '<div class="menu-minipanels menu-minipanel-' . $mlid . '">';
-      $panel['#suffix'] = '</div>';
-      // Add it to the output stack.
-      $page['page_bottom']['menu_minipanels'][] = $panel;
-    }
-
-    if (!empty($output)) {
-      $page['page_bottom']['menu_minipanels'] = array(
-        '#markup' => $output,
-      );
-    }
+    // Load the output.
+    $page['page_bottom']['menu_minipanels'] = menu_minipanels_panels();
   }
 }
 

@@ -1,3 +1,27 @@
+Menu_MiniPanels 7.x-1.0-rc9, 2012-11-13
+---------------------------------------
+#1718012 by DamienMcKenna: Optional style setting fields were required; also
+  reorganized the style settings fieldset for a slight UX improvement.
+#1775482 by DamienMcKenna: Position Type selections are incorrect.
+#1218174 by DamienMcKenna: Allow the position container to be changed.
+#1837178 by DamienMcKenna: Corrected the Mini Panels admin link.
+#1810496 by DamienMcKenna: If the 'container' value is empty, don't output it.
+
+
+Menu_MiniPanels 7.x-1.0-rc8, 2012-08-21
+---------------------------------------
+#1580312 by codycraven, DamienMcKenna: Improved the custom JS to be cleaner and
+  more compatible with theming changes.
+#1661730 by DamienMcKenna: Replaced $.each with for() loop (minor performance
+  improvement).
+#1683872 by DamienMcKenna: Fixed callbacks, they were broken by the changes in
+  #1661730.
+#1633136 by DamienMcKenna: If the main menu and secondary menu are the same,
+  also process the second level of that menu.
+#1728018 by DamienMcKenna: Restructured the output generation so it happens
+  earlier in the page cycle to help avoid problems with other modules.
+
+
 Menu_MiniPanels 7.x-1.0-rc7, 2012-06-17
 ---------------------------------------
 #1264738 by DamienMcKenna: Added a note about 404 pages and Navigation404.
