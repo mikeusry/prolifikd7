@@ -1,3 +1,33 @@
+Menu_MiniPanels 7.x-1.1, 2012-12-01
+-----------------------------------
+#1854870 by DamienMcKenna: Replaced the array_replace_recursive() function with
+  one taken from php.net.
+#1851816 by DamienMcKenna: Cleaned up handling of default values and settings
+  for the shared settings form, resolves errors in 1.0.
+
+
+Menu_MiniPanels 7.x-1.0, 2012-11-24
+-----------------------------------
+#1847292 by patrickd: Drush Make integration for automatic downloading of the
+  necessary qTip library.
+#1844338 by willvincent, DamienMcKenna: Workaround for older versions of PHP
+  that don't have the array_replace_recursive function.
+#1148956 by DamienMcKenna, lussoluca: Support for qTip's position 'adjust'
+  settings.
+#1148956 by DamienMcKenna: Due to problems with qTip, both 'adjust' values must
+  be non-zero in order for them to work.
+#1798938 by DamienMcKenna: Separated the bundled qTip JS callback code so it
+  may be overridden & customized.
+#1021372 by DamienMcKenna: Remove each menu item's configuration in
+  hook_uninstall().
+#1840360 by DamienMcKenna: Check the entire menu tree when determining if qTip
+  should be loaded.
+#1849694 by DamienMcKenna: Disable integration with the Admin Menu and Devel
+  modules.
+#1849710 by DamienMcKenna: Drush download-qtip command could fail when the
+  Libraries API module is installed.
+
+
 Menu_MiniPanels 7.x-1.0-rc9, 2012-11-13
 ---------------------------------------
 #1718012 by DamienMcKenna: Optional style setting fields were required; also

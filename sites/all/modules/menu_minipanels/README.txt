@@ -30,6 +30,13 @@ Installation: Manual
  5. Enable the module from the modules admin page (admin/modules).
 
 
+Installation: Drush Make
+------------------------
+ 1. Add menu_minipanels to a .make file (see http://drupal.org/node/1006620).
+ 2. Execute the Drush Make file.
+ 3. Enable via the installation profile or manually on the modules admin page.
+
+
 Configuration
 -------------
  * Visit the "Menu Minipanels" settings page
@@ -52,6 +59,12 @@ The module will add the class "qtip-hover" to the menu item which triggered the
 minipanel to display, allowing it to be themed to match the normal :hover
 state.  There is not currently a way to make it retain the :hover state while
 the pointer is over the minipanel, so this is a work-around.
+
+If custom callbacks are needed it may be worthwhile to disable the default
+callback JavaScript code via the main settings page; it is suggested to copy
+the existing menu_minipanels.callbacks.js file's contents into a new file in
+either another module or a theme and customize from there. Note: this must be
+done in order to use the "beforeShow", "beforeHide" or 'onRender' callbacks.
 
 
 Known Issues

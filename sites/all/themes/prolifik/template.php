@@ -4,6 +4,13 @@
  * @file
  * This file contains template processing for the prolifik theme.
  */
+ 
+
+function prolifik_preprocess_node(&$variables) {
+  if ($variables['submitted']) {
+    $variables['submitted'] = t('Posted: !datetime', array( '!datetime' => format_date($variables['node']->created, 'custom', 'F j, Y')));
+  }
+}
 
 function prolifik_preprocess_maintenance_page(&$variables) {
   $variables['logo'] = path_to_theme() . '/images/logo_maintenance.png';

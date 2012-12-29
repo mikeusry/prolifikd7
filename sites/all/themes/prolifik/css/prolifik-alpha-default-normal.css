@@ -1,11 +1,21 @@
-/* @override http://shs.loc/sites/all/themes/prolifik/css/prolifik-alpha-default-normal.css?m67bl9 */
+/* @override 
+	http://dev.prolifikseo.com/sites/all/themes/prolifik/css/prolifik-alpha-default-normal.css?mf6rsa
+	http://dev.prolifikseo.com/sites/all/themes/prolifik/css/prolifik-alpha-default-normal.css?mfso18 */
 
 /* This file will hold styles that are loaded using the same media query as the normal grid. */
 
 #logo {
-  width: 250px;
+	position: fixed;
+	z-index: 999;
+	margin-top: 0;
 }
-
+#region-user-second {
+	z-index: 999;
+	position: fixed;
+	right: 30px;
+	width: 205px;
+	top: 12px;
+}
 /* Search Form */
 #block-search-form {
   position: absolute;
@@ -14,4 +24,42 @@
   top: 35px;
   width: 300px;
   z-index: 1;
+}
+
+/* @group Menu */
+
+#region-menu .region-inner {
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 270px;
+}
+
+
+#zone-menu-wrapper {
+	position: fixed;
+	width: 100%;
+	background-color: white;
+	height: 74px;
+	-moz-box-shadow: 0 1px 10px black;
+	-webkit-box-shadow: 0 1px 10px black;
+	box-shadow: 0 1px 10px black;
+}
+#zone-branding-wrapper {min-height: 150px; }
+#region-menu nav.navigation {
+	margin-top: 23px;
+	margin-bottom: 0;
+}
+
+#region-menu div.region-inner.region-menu-inner nav.navigation ul.menu li.leaf a {
+	color: #4a4946;
+	text-shadow: none;
+}
+/* @end */
+
+#block-block-2 {
+	margin-top: 90px;
+}
+
+#node-tabbed-page-20 ul.horizontal-tabs-list li.horizontal-tab-button {
+	width: 24.7%;
 }

@@ -1,3 +1,8 @@
+/* @override 
+	http://prolifikbase.loc/sites/all/themes/prolifik/css/prolifik-alpha-default-narrow.css?medkgg
+	http://dev.prolifikseo.com/sites/all/themes/prolifik/css/prolifik-alpha-default-narrow.css?mf17ni
+	http://dev.prolifikseo.com/sites/all/themes/prolifik/css/prolifik-alpha-default-narrow.css?mfso18 */
+
 /* This file will hold styles that are loaded using the same media query as the narrow grid. */
 
 .logo-img {
@@ -6,7 +11,6 @@
 }
 
 /* User */
-#region-user-first,
 #region-user-second {
   margin: 0;
   position: absolute;
@@ -24,4 +28,33 @@
   top: 25px;
   width: 300px;
   z-index: 1;
+}
+#region-menu nav.navigation ul.menu li.leaf {display: block; float: left;
+}
+#block-menu-menu-social-media-menu {float: right;
+	margin-top: 38px;
+}
+
+#block-menu-menu-social-media-menu li {list-style: none; list-style-image: none;
+	text-align: right;
+	padding-right: 20px;
+	font-size: 18px;
+}
+
+#block-menu-menu-social-media-menu li a {color: black;
+	font-family: "Open Sans";
+}
+#node-tabbed-page-20 ul.horizontal-tabs-list li.horizontal-tab-button {
+	background-color: #3b88c6;
+	text-align: center;
+	font-size: 25px;
+	width: 24.6%;
+}
+#node-tabbed-page-20 ul.horizontal-tabs-list li.last {
+border-right: none;
+padding-right: 2px;
+}
+#block-block-3 {
+	text-align: right;
+	margin-bottom: 0;
 }
